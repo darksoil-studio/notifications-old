@@ -1,0 +1,29 @@
+{{#merge previous_file_content}}
+  {{#match_scope (concat "export class " (pascal_case coordinator_zome_manifest.name) "Store {" ) }}
+  {{previous_scope_content}}
+  
+  /** {{title_case collection_name}} */
+
+  {{#if (eq collection_type.type "ByAuthor")}}
+  {{camel_case collection_name}} = new LazyHoloHashMap((author: AgentPubKey) => 
+    pipe(
+      collectionStore(
+        this.client, 
+        () => this.client.get{{pascal_case collection_name}}(author),
+        '{{pascal_case collection_name}}'
+      ),
+      {{camel_case collection_name}} => slice(this.{{camel_case (plural referenceable.name)}}, {{camel_case collection_name}}.map(l => l.target))
+    )
+  );
+  {{else}}
+  {{camel_case collection_name}} = pipe(
+    collectionStore(
+      this.client, 
+      () => this.client.get{{pascal_case collection_name}}(),
+      '{{pascal_case collection_name}}'
+    ),
+    {{camel_case collection_name}} => slice(this.{{camel_case (plural referenceable.name)}}, {{camel_case collection_name}}.map(l => l.target))
+  );
+  {{/if}}
+  {{/match_scope}}
+{{/merge}}

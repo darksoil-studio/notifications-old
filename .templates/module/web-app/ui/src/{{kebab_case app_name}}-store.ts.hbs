@@ -1,0 +1,21 @@
+import { 
+  collectionStore, 
+  liveLinksStore, 
+  deletedLinksStore, 
+  allRevisionsOfEntryStore,
+  latestVersionOfEntryStore, 
+  immutableEntryStore, 
+  deletesForEntryStore, 
+  AsyncReadable,
+  pipe
+} from "@holochain-open-dev/stores";
+import { slice, HashType, retype, EntryRecord, LazyHoloHashMap } from "@holochain-open-dev/utils";
+import { NewEntryAction, Record, ActionHash, EntryHash, AgentPubKey } from '@holochain/client';
+
+import { {{pascal_case app_name}}Client } from './{{kebab_case app_name}}-client.js';
+
+export class {{pascal_case app_name}}Store {
+
+  constructor(public client: {{pascal_case app_name}}Client) {}
+  
+}

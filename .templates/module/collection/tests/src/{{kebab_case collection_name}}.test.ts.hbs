@@ -1,0 +1,36 @@
+import { assert, test } from "vitest";
+
+import { runScenario, dhtSync } from '@holochain/tryorama';
+import { ActionHash, Record, EntryHash } from '@holochain/client';
+import { decode } from '@msgpack/msgpack';
+import { EntryRecord } from '@holochain-open-dev/utils';
+import { toPromise } from '@holochain-open-dev/stores';
+
+import { {{pascal_case referenceable.name}} } from '../../ui/src/types.js';
+import { sample{{pascal_case referenceable.name}} } from '../../ui/src/mocks.js';
+import { setup } from './setup.js';
+
+test('create a {{pascal_case referenceable.name}} and get {{lower_case collection_name}}', async () => {
+  await runScenario(async scenario => {
+    const { alice, bob } = await setup(scenario);
+
+    // Bob gets {{lower_case collection_name}}
+    let collectionOutput = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(alice.player.agentPubKey){{/if}});
+    assert.equal(collectionOutput.size, 0);
+
+    // Alice creates a {{pascal_case referenceable.name}}
+    const {{camel_case referenceable.name}}: EntryRecord<{{pascal_case referenceable.name}}> = await alice.store.client.create{{pascal_case referenceable.name}}(await sample{{pascal_case referenceable.name}}(alice.store.client));
+    assert.ok({{camel_case referenceable.name}});
+    
+    await dhtSync(
+      [alice.player, bob.player],
+      alice.player.cells[0].cell_id[0]
+    );
+    
+    // Bob gets {{lower_case collection_name}} again
+    collectionOutput = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(alice.player.agentPubKey){{/if}});
+    assert.equal(collectionOutput.size, 1);
+    assert.deepEqual({{camel_case referenceable.name}}.{{#if (eq referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, Array.from(collectionOutput.keys())[0]);    
+  });
+});
+

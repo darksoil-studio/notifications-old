@@ -1,0 +1,111 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Frontend/Setting up the frontend" />
+
+# Seting Up the Frontend
+
+> This guide assumes you are building a web application written in JS or TS, using NPM as the package manager.
+
+> [Go here](https://holochain-open-dev.github.io/reusable-modules/frontend/frameworks/) to look at examples of integration of this module in different frontend frameworks (Vue, Svelte, etc.).
+
+1. Install this module and its necessary dependencies with:
+
+```bash
+npm install @holochain-open-dev/notifications-provider
+```
+
+Careful! If you are using NPM workspaces (which is the case for the apps generated with the holochain scaffolding tool (`hc scaffold`), you need to specify which workspace you want to install those dependencies to, and run the command from the root folder of the repository. In the case of the apps generated with the scaffolding tool:
+
+```bash
+npm install @holochain-open-dev/notifications-provider -w ui
+```
+
+2. Connect to Holochain with the `AppAgentClient`, and create the `NotificationsProviderStore` with it:
+
+```js
+import { NotificationsProviderStore, NotificationsProviderClient } from "@holochain-open-dev/profiles";
+import { AppAgentWebsocket } from "@holochain/client";
+
+async function setupNotificationsProviderStore() {
+  const client = await AppAgentWebsocket.connect(new URL('ws://localhost'), '')
+
+  // TODO: change "MY_CELL_ROLE" for the roleId that you can find in your "happ.yaml"
+  return new NotificationsProviderStore(new NotificationsProviderClient(client, '<MY_CELL_ROLE>'));
+}
+```
+
+3. Import the `<notifications-provider-context>` element and add it to your html **wrapping the whole section of your page in which you are going to be placing** the other elements from `@holochain-open-dev/notifications-provider`:
+
+```js
+// This can be placed in the index.js, at the top level of your web-app.
+import "@holochain-open-dev/notifications-provider/definitions/notifications-provider-context.js";
+```
+
+And then add the `<notifications-provider-context>` element in your html:
+
+```html
+<notifications-provider-context>
+  <!-- Add here other elements from @holochain-open-dev/notifications-provider -->
+</notifications-provider-context>
+```
+
+4. Attach the `notificationsProviderStore` to the `<notifications-provider-context>` element:
+
+- Go to [this page](https://holochain-open-dev.github.io/reusable-modules/frontend/frameworks/), select the framework you are using, and follow its example.
+
+You need to set the `store` property of it to your already instantiated `NotificationsProviderStore` object:
+
+- If you **are using some JS framework**:
+
+```html
+<!-- React -->
+<notifications-provider-context store={ notificationsProviderStore}><!-- ... --></notifications-provider-context>
+
+<!-- Angular -->
+<notifications-provider-context [store]="notificationsProviderStore"><!-- ... --></notifications-provider-context>
+
+<!-- Vue -->
+<notifications-provider-context :store="notificationsProviderStore"><!-- ... --></notifications-provider-context>
+
+<!-- Svelte -->
+<notifications-provider-context store={ notificationsProviderStore}><!-- ... --></notifications-provider-context>
+
+<!-- Lit -->
+<notifications-provider-context .store=${ notificationsProviderStore}><!-- ... --></notifications-provider-context>
+```
+
+OR
+
+- If you **are not using any framework**:
+
+```js
+const contextElement = document.querySelector("notifications-provider-context");
+contextElement.store = store;
+```
+
+> You can read more about the context pattern [here](https://holochain-open-dev.github.io/reusable-modules/frontend/using/#context).
+
+5. [Choose which elements you need](?path=/docs/frontend-elements) and import them like this:
+
+```js
+import "@holochain-open-dev/notifications-provider/elements/notifications-provider-context.js";
+```
+
+And then they are ready be used inside the `<notifications-provider-context>` just like any other HTML tag.
+
+This will define all the elements from this module in the global `CustomElementsRegistry`. You can read more about Custom Elements [here](https://developers.google.com/web/fundamentals/web-components/customelements).
+
+6. Add your preferred shoelace theme in your `<head>` tag:
+
+```html
+  <head>
+    <link rel="stylesheet" href="path/to/shoelace/dist/themes/light.css" />
+  </head>
+```
+
+You can read more about how to initialize the shoelace theme [here](https://shoelace.style/getting-started/themes?id=activating-themes).
+
+# Demo
+
+You can see a full working example of the UI working in [here](https://github.com/holochain-open-dev/notifications-provider/blob/main/ui/demo/index.html).
+

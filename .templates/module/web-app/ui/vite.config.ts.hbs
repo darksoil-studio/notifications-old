@@ -1,0 +1,13 @@
+// vite.config.js
+import checker from "vite-plugin-checker";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  root: './demo',
+  plugins: [
+    checker({ 
+      typescript: true,
+    }),
+  ],
+});
+

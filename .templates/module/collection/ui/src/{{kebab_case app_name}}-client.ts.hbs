@@ -1,0 +1,12 @@
+{{#merge previous_file_content}}
+  {{#match_scope (concat "export class " (pascal_case coordinator_zome_manifest.name) "Client extends ZomeClient<" (pascal_case coordinator_zome_manifest.name) "Signal> {" ) }}
+  {{previous_scope_content}}
+
+  /** {{title_case collection_name}} */
+
+  async get{{pascal_case collection_name}}({{#if (eq collection_type.type "ByAuthor")}}author: AgentPubKey{{else}}{{/if}}): Promise<Array<Link>> {
+    return this.callZome('get_{{snake_case collection_name}}', {{#if (eq collection_type.type "ByAuthor")}}author{{else}}undefined{{/if}});
+  }
+
+  {{/match_scope}}
+{{/merge}}

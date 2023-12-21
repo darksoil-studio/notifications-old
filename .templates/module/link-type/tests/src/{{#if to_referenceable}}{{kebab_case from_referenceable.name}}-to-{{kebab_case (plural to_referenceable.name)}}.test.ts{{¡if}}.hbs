@@ -1,0 +1,124 @@
+import { assert, test } from "vitest";
+
+import { runScenario, dhtSync } from '@holochain/tryorama';
+import { ActionHash, Record } from '@holochain/client';
+import { decode } from '@msgpack/msgpack';
+import { EntryRecord } from '@holochain-open-dev/utils';
+import { toPromise } from '@holochain-open-dev/stores';
+
+import { setup } from './setup.js';
+
+{{#if (ne from_referenceable.hash_type "AgentPubKey")}}
+import { {{pascal_case from_referenceable.name}} } from '../../ui/src/types.js';
+import { sample{{pascal_case from_referenceable.name}} } from '../../ui/src/mocks.js';
+{{/if}}
+{{#if (ne to_referenceable.hash_type "AgentPubKey")}}
+import { {{pascal_case to_referenceable.name}} } from '../../ui/src/types.js';
+import { sample{{pascal_case to_referenceable.name}} } from '../../ui/src/mocks.js';
+{{/if}}
+
+test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_referenceable.name}}', async () => {
+  await runScenario(async scenario => {
+    const { alice, bob } = await setup(scenario);
+
+{{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+    const baseAddress = alice.player.agentPubKey;
+{{else}}
+    const baseRecord: EntryRecord<{{pascal_case from_referenceable.name}}> = await alice.store.client.create{{pascal_case from_referenceable.name}}(await sample{{pascal_case from_referenceable.name}}(alice.store.client));
+  {{#if (eq from_referenceable.hash_type "EntryHash")}}
+    const baseAddress = baseRecord.entryHash;
+  {{else}}
+    const baseAddress = baseRecord.actionHash;
+  {{/if}}
+{{/if}}
+{{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+    const targetAddress = alice.player.agentPubKey;
+{{else}}
+    const targetRecord: EntryRecord<{{pascal_case to_referenceable.name}}> = await alice.store.client.create{{pascal_case to_referenceable.name}}(await sample{{pascal_case to_referenceable.name}}(alice.store.client));
+  {{#if (eq to_referenceable.hash_type "EntryHash")}}
+    const targetAddress = targetRecord.entryHash;
+  {{else}}
+    const targetAddress = targetRecord.actionHash;
+  {{/if}}
+{{/if}}
+
+    // Bob gets the links, should be empty
+    let linksOutput = await toPromise(bob.store.{{#if (ne from_referenceable.hash_type "ActionHash")}}{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress){{else}}{{camel_case (plural from_referenceable.name)}}.get(baseAddress).{{camel_case (plural to_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
+    assert.equal(linksOutput.size, 0);
+
+    // Alice creates a link from {{pascal_case from_referenceable.name}} to {{pascal_case to_referenceable.name}}
+    await alice.store.client.add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}(baseAddress, targetAddress);
+    
+    // Wait for the created entry to be propagated to the other node.
+    await dhtSync(
+      [alice.player, bob.player],
+      alice.player.cells[0].cell_id[0]
+    );
+    
+    // Bob gets the links again
+    linksOutput = await toPromise(bob.store.{{#if (ne from_referenceable.hash_type "ActionHash")}}{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress){{else}}{{camel_case (plural from_referenceable.name)}}.get(baseAddress).{{camel_case (plural to_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
+	{{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(linksOutput.length, 1);
+    assert.deepEqual(targetAddress, linksOutput[0]);
+	{{else}}
+    assert.equal(linksOutput.size, 1);
+    assert.deepEqual(targetAddress, Array.from(linksOutput.keys())[0]);
+	{{/if}}
+
+{{#if bidireccional}}
+    // Bob gets the links in the inverse direction
+    let inverseLinksOutput = await toPromise(bob.store.{{#if (ne to_referenceable.hash_type "ActionHash")}}{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress){{else}}{{camel_case (plural to_referenceable.name)}}.get(targetAddress).{{camel_case (plural from_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
+	{{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(inverseLinksOutput.length, 1);
+    assert.deepEqual(baseAddress, inverseLinksOutput[0]);
+	{{else}}
+    assert.equal(inverseLinksOutput.size, 1);
+    assert.deepEqual(baseAddress, Array.from(inverseLinksOutput.keys())[0]);
+	{{/if}}
+{{/if}}
+
+{{#if delete}}
+    await alice.store.client.remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}(baseAddress, targetAddress);
+    
+    // Wait for the created entry to be propagated to the other node.
+    await dhtSync(
+      [alice.player, bob.player],
+      alice.player.cells[0].cell_id[0]
+    );
+
+    // Bob gets the links again
+    linksOutput = await toPromise(bob.store.{{#if (ne from_referenceable.hash_type "ActionHash")}}{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress){{else}}{{camel_case (plural from_referenceable.name)}}.get(baseAddress).{{camel_case (plural to_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
+	{{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(linksOutput.length, 0);
+	{{else}}
+    assert.equal(linksOutput.size, 0);
+	{{/if}}
+
+    // Bob gets the deleted links
+	let deletedLinksOutput = await toPromise(bob.store.{{#if (ne from_referenceable.hash_type "ActionHash")}}{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress){{else}}{{camel_case (plural from_referenceable.name)}}.get(baseAddress).{{camel_case (plural to_referenceable.name)}}{{/if}}.deleted);
+	{{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(deletedLinksOutput.length, 1);
+	{{else}}
+    assert.equal(deletedLinksOutput.size, 1);
+	{{/if}}
+
+  {{#if bidireccional}}
+    // Bob gets the links in the inverse direction
+    inverseLinksOutput = await toPromise(bob.store.{{#if (ne to_referenceable.hash_type "ActionHash")}}{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress){{else}}{{camel_case (plural to_referenceable.name)}}.get(targetAddress).{{camel_case (plural from_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
+	{{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(inverseLinksOutput.length, 0);
+	{{else}}
+    assert.equal(inverseLinksOutput.size, 0);
+	{{/if}}
+
+	deletedLinksOutput = await toPromise(bob.store.{{#if (ne to_referenceable.hash_type "ActionHash")}}{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress){{else}}{{camel_case (plural to_referenceable.name)}}.get(targetAddress).{{camel_case (plural from_referenceable.name)}}{{/if}}.deleted);
+	{{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(deletedLinksOutput.length, 1);
+	{{else}}
+    assert.equal(deletedLinksOutput.size, 1);
+	{{/if}}
+  {{/if}}
+
+{{/if}}
+  });
+});
