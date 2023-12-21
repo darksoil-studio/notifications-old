@@ -1,3 +1,7 @@
+import { fcmPushNotificationsProviderStoreContext } from './fcm_push_notifications_provider/fcm-push-notifications-provider/context.js';
+import { FcmPushNotificationsProviderClient } from './fcm_push_notifications_provider/fcm-push-notifications-provider/fcm-push-notifications-provider-client.js';
+import { FcmPushNotificationsProviderStore } from './fcm_push_notifications_provider/fcm-push-notifications-provider/fcm-push-notifications-provider-store.js';
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -50,7 +54,7 @@ import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
 export class DemoApp extends LitElement {
 
-  constructor() {
+constructor() {
     super();
     this._loading = true;
     this._view = { view: 'main' };
@@ -70,6 +74,7 @@ export class DemoApp extends LitElement {
     new ContextProvider(this, profilesStoreContext, profilesStore);
     
     this._notificationsProviderStore = new NotificationsProviderStore(new NotificationsProviderClient(appAgentClient, 'notifications_provider_test'));
+    this._fcmPushNotificationsProviderStore = new ContextProvider(this, fcmPushNotificationsProviderStoreContext, new FcmPushNotificationsProviderStore(new FcmPushNotificationsProviderClient(appAgentClient, 'fcm_push_notifications_provider')));
   }
 
   renderContent() {
@@ -106,8 +111,7 @@ export class DemoApp extends LitElement {
       }
     `,
     sharedStyles,
-  ];
-}
+  ];}
       
       customElements.define('demo-app', DemoApp);
     </script>

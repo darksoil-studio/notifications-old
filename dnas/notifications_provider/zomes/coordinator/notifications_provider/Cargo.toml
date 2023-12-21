@@ -13,10 +13,6 @@ hdk = { workspace = true }
 serde = { workspace = true }
 
 hc_zome_notifications_provider_integrity = { workspace = true }
-
-[dev-dependencies]
-fixt = "*"
-futures = { version = "0.3.1", default-features = false }
-hdk = { workspace = true, features = ["encoding", "test_utils"] }
-holochain = { workspace = true }
-tokio = { version = "1.3", features = ["full"] }
+hc_zome_fcm_push_notifications_provider_types = { workspace = true }
+# hc_zome_trait_pending_notifications = { workspace = true }
+# hc_zome_traits = { workspace = true }
