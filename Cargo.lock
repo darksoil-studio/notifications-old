@@ -2109,12 +2109,30 @@ dependencies = [
 ]
 
 [[package]]
-name = "hc_zome_fcm_push_notifications_provider_coordinator"
+name = "hc_zome_notifications_coordinator"
+version = "0.0.1"
+dependencies = [
+ "hc_zome_notifications_integrity",
+ "hc_zome_notifications_types",
+ "hdk",
+ "serde",
+]
+
+[[package]]
+name = "hc_zome_notifications_integrity"
+version = "0.0.1"
+dependencies = [
+ "hdi",
+ "serde",
+]
+
+[[package]]
+name = "hc_zome_notifications_provider_fcm_bridge"
 version = "0.0.1"
 dependencies = [
  "fixt",
  "futures",
- "hc_zome_fcm_push_notifications_provider_integrity",
+ "hc_zome_notifications_types",
  "hdk",
  "holochain",
  "serde",
@@ -2122,15 +2140,43 @@ dependencies = [
 ]
 
 [[package]]
-name = "hc_zome_fcm_push_notifications_provider_integrity"
+name = "hc_zome_notifications_provider_fcm_coordinator"
 version = "0.0.1"
 dependencies = [
+ "fixt",
+ "futures",
+ "hc_zome_notifications_provider_fcm_integrity",
+ "hc_zome_notifications_provider_fcm_types",
+ "hc_zome_notifications_types",
+ "hdk",
+ "holochain",
+ "serde",
+ "tokio",
+]
+
+[[package]]
+name = "hc_zome_notifications_provider_fcm_integrity"
+version = "0.0.1"
+dependencies = [
+ "hc_zome_notifications_provider_fcm_types",
  "hdi",
  "serde",
 ]
 
 [[package]]
-name = "hc_zome_fcm_push_notifications_provider_types"
+name = "hc_zome_notifications_provider_fcm_recipient"
+version = "0.0.1"
+dependencies = [
+ "fixt",
+ "futures",
+ "hdk",
+ "holochain",
+ "serde",
+ "tokio",
+]
+
+[[package]]
+name = "hc_zome_notifications_provider_fcm_types"
 version = "0.1.0"
 dependencies = [
  "hdi",
@@ -2138,19 +2184,32 @@ dependencies = [
 ]
 
 [[package]]
-name = "hc_zome_notifications_provider_coordinator"
-version = "0.0.1"
+name = "hc_zome_notifications_types"
+version = "0.1.0"
 dependencies = [
- "hc_zome_fcm_push_notifications_provider_types",
- "hc_zome_notifications_provider_integrity",
+ "hdi",
+ "serde",
+]
+
+[[package]]
+name = "hc_zome_profiles_coordinator"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2bae0ee9f90bdaa1fb3f0888817fd37447e8fd1ebf2b494cf81b1270188d75b2"
+dependencies = [
+ "derive_more",
+ "hc_zome_profiles_integrity",
  "hdk",
  "serde",
 ]
 
 [[package]]
-name = "hc_zome_notifications_provider_integrity"
-version = "0.0.1"
+name = "hc_zome_profiles_integrity"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "536920780e20fffc9757a8f762f235b64fe1bb847d0bf494a927e22aa530be58"
 dependencies = [
+ "derive_more",
  "hdi",
  "serde",
 ]
@@ -4790,6 +4849,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "profiles"
+version = "0.0.1"
+dependencies = [
+ "hc_zome_profiles_coordinator",
+ "hdk",
+ "serde",
+]
+
+[[package]]
+name = "profiles_integrity"
+version = "0.0.1"
+dependencies = [
+ "hc_zome_profiles_integrity",
+ "hdk",
+ "serde",
+]
+
+[[package]]
 name = "ptr_meta"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6331,6 +6408,18 @@ dependencies = [
  "serde",
  "sha-1 0.10.1",
  "test-fuzz-internal",
+]
+
+[[package]]
+name = "tests"
+version = "0.0.1"
+dependencies = [
+ "fixt",
+ "futures",
+ "hdk",
+ "holochain",
+ "serde",
+ "tokio",
 ]
 
 [[package]]

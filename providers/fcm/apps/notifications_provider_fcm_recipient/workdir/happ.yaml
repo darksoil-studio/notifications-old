@@ -1,0 +1,18 @@
+---
+manifest_version: "1"
+name: notifications_fcm_recipient
+description: ~
+roles:
+  - name: notifications
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: "./notifications_fcm_recipient.dna"
+      modifiers:
+        network_seed: ~
+        properties: ~
+        origin_time: ~
+        quantum_time: ~
+      installed_hash: ~
+      clone_limit: 0

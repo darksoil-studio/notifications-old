@@ -1,0 +1,21 @@
+---
+manifest_version: "1"
+name: notifications_provider_fcm
+integrity:
+  network_seed: ~
+  properties: ~
+  origin_time: 1703170182915758
+  zomes:
+    - name: notifications_provider_fcm_integrity
+      hash: ~
+      bundled: "../../../target/wasm32-unknown-unknown/release/hc_zome_notifications_provider_fcm_integrity.wasm"
+      dependencies: ~
+      dylib: ~
+coordinator:
+  zomes:
+    - name: notifications_provider_fcm
+      hash: ~
+      bundled: "../../../target/wasm32-unknown-unknown/release/hc_zome_notifications_provider_coordinator.wasm"
+      dependencies:
+        - name: notifications_provider_fcm_integrity
+      dylib: ~

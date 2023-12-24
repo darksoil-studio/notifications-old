@@ -1,0 +1,18 @@
+---
+manifest_version: "1"
+name: test_app
+description: ~
+roles:
+  - name: notifications
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: "../../../notifications/workdir/notifications.dna"
+      modifiers:
+        network_seed: ~
+        properties: ~
+        origin_time: ~
+        quantum_time: ~
+      installed_hash: ~
+      clone_limit: 0

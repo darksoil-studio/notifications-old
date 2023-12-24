@@ -1,0 +1,31 @@
+---
+manifest_version: "1"
+name: notifications_provider_fcm
+description: ~
+roles:
+  - name: notifications
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: "../dnas/notifications/workdir/notifications.dna"
+      modifiers:
+        network_seed: ~
+        properties: ~
+        origin_time: ~
+        quantum_time: ~
+      installed_hash: ~
+      clone_limit: 0
+  - name: notifications_provider_fcm
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: "../dnas/notifications_provider_fcm/workdir/notifications_provider_fcm.dna"
+      modifiers:
+        network_seed: ~
+        properties: ~
+        origin_time: ~
+        quantum_time: ~
+      installed_hash: ~
+      clone_limit: 0
