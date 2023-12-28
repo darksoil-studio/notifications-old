@@ -5,41 +5,81 @@ use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
 
 #[tokio::test(flavor = "multi_thread")]
-async fn create_and_get() {
+async fn complex_flow() {
     // Use prebuilt DNA file
-    let dna_path = std::env::current_dir()
+    let notifications_dna = SweetDnaFile::from_bundle(
+        &std::env::current_dir()
+            .unwrap()
+            .join("../notifications/workdir/notifications.dna"),
+    )
+    .await
+    .unwrap();
+    let fixture_app = [notifications_dna];
+
+    let fcm_notifications_dna= SweetDnaFile::from_bundle(&std::env::current_dir()
         .unwrap()
-        .join("../../workdir/profiles-test.dna");
-    let dna = SweetDnaFile::from_bundle(&dna_path).await.unwrap();
+        .join("../providers/fcm/apps/notifications_provider_fcm/dnas/notifications/workdir/notifications.dna")).await.unwrap();
+    let fcm_provider_dna= SweetDnaFile::from_bundle(&std::env::current_dir()
+        .unwrap()
+        .join("../providers/fcm/apps/notifications_provider_fcm/dnas/notifications_provider_fcm/workdir/notifications_provider_fcm.dna")).await.unwrap();
+    let fcm_provider_app = [fcm_notifications_dna, fcm_provider_dna];
+
+    let fcm_recipient_dna= SweetDnaFile::from_bundle(&std::env::current_dir()
+        .unwrap()
+        .join("../providers/fcm/apps/notifications_provider_fcm_recipient/workdir/notifications_fcm_recipient.dna")).await.unwrap();
+    let fcm_recipient_app = [fcm_recipient_dna];
 
     // Set up conductors
-    let mut conductors = SweetConductorBatch::from_config(2, ConductorConfig::default()).await;
-    let apps = conductors.setup_app("profiles", &[dna]).await.unwrap();
+    let mut conductors = SweetConductorBatch::from_config(3, ConductorConfig::default()).await;
+
+    let fixture_app = conductors[0]
+        .setup_app("gather", &fixture_app)
+        .await
+        .unwrap();
+    let provider_app = conductors[1]
+        .setup_app("fcm_provider", &fcm_provider_app)
+        .await
+        .unwrap();
+    let recipient_app = conductors[2]
+        .setup_app("fcm_recipient", &fcm_recipient_app)
+        .await
+        .unwrap();
     conductors.exchange_peer_info().await;
 
-    let ((alice,), (bobbo,)) = apps.into_tuples();
+    let conductors = conductors.into_inner();
 
-    let alice_zome = alice.zome("profiles");
-    let bob_zome = bobbo.zome("profiles");
+    let fixture = &conductors[0];
+    let provider = &conductors[1];
+    let recipient = &conductors[2];
 
-    let alice_pub_key = alice.agent_pubkey();
+    let fixture_alice = fixture_app.into_cells();
+    let fixture_zome = fixture_alice[0].zome("notifications");
 
-    // Try to get my profile before creating one. Should return None.
-    let record_1: Option<Record> = conductors[0]
-        .call(&alice_zome, "get_agent_profile", alice_pub_key)
-        .await;
-    assert_eq!(record_1, None);
+    let provider_cells = provider_app.into_cells();
+    let provider_notifications_zome = provider_cells[0].zome("notifications");
+    let provider_fcm_zome = provider_cells[1].zome("notifications_provider_fcm");
 
-    // Create profile for alice and try to get it via get_my_profile() as well as get_agent_profile()
-    let profile = Profile {
-        nickname: String::from("alice"),
-        fields: BTreeMap::new(),
-    };
+    let recipient_cells = recipient_app.into_cells();
+    let recipient_zome = recipient_cells[0].zome("notifications");
 
-    let record_1: Record = conductors[0]
-        .call(&alice_zome, "create_profile", profile)
-        .await;
+    /* Setup provider */
 
-    consistency_10s([&alice, &bobbo]).await;
+    // Publish Service Account Key
+    // Announce as provider
 
+    /* Setup recipient */
+    // Register FCM token
+    // Shutdown recipient
+
+    /* Send notification */
+    // Send notification from fixture notification zome
+    // FCM provider zome sends signal
+    // Turn on recipient again
+
+    // let record_1: Option<Record> = conductors[0]
+    //     .call(&alice_zome, "get_agent_profile", alice_pub_key)
+    //     .await;
+    // assert_eq!(record_1, None);
+
+    // consistency_10s([&alice, &bobbo]).await;
 }
