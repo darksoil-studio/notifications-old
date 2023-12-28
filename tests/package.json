@@ -1,0 +1,19 @@
+{
+  "name": "tests",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "author": "",
+  "license": "CAL-1.0",
+  "dependencies": {
+    "@holochain/client": "^0.16.1",
+    "@holochain/tryorama": "^0.15.0",
+    "@holochain-open-dev/utils": "^0.16.0",
+    "@msgpack/msgpack": "^2.7.0",
+    "vitest": "^0.34.5"
+  },
+  "type": "module"
+}

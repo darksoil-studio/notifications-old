@@ -7,17 +7,13 @@ integrity:
   origin_time: 1703170182915758
   zomes:
     - name: notifications_integrity
-      hash: ~
       bundled: "../../../../../target/wasm32-unknown-unknown/release/hc_zome_notifications_integrity.wasm"
-      dependencies: ~
 coordinator:
   zomes:
     - name: notifications
-      hash: ~
       bundled: "../../../../../target/wasm32-unknown-unknown/release/hc_zome_notifications_coordinator.wasm"
       dependencies:
         - name: notifications_integrity
     - name: notifications_provider_fcm_recipient
-      hash: ~
       bundled: "../../../../../target/wasm32-unknown-unknown/release/hc_zome_notifications_provider_fcm_recipient.wasm"
       dependencies: []

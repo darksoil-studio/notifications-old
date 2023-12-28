@@ -2446,16 +2446,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "acdcb7d66c3a2bc1cfaaaebe86b4991f731278d16b86aac31cf3e46ca4c17e89"
 dependencies = [
  "anyhow",
- "arbitrary",
  "async-recursion",
  "async-trait",
  "base64 0.13.1",
  "byteorder",
  "cfg-if 0.1.10",
  "chrono",
- "contrafact",
  "derive_more",
- "diff",
  "directories",
  "either",
  "fallible-iterator",
@@ -2474,7 +2471,6 @@ dependencies = [
  "holochain_serialized_bytes",
  "holochain_sqlite",
  "holochain_state",
- "holochain_test_wasm_common",
  "holochain_trace",
  "holochain_types",
  "holochain_util",
@@ -2490,7 +2486,6 @@ dependencies = [
  "kitsune_p2p_bootstrap",
  "kitsune_p2p_types",
  "lazy_static",
- "matches",
  "mockall",
  "mr_bundle",
  "must_future",
@@ -2526,7 +2521,6 @@ dependencies = [
  "tracing-subscriber",
  "tx5-go-pion-turn",
  "tx5-signal-srv",
- "unwrap_to",
  "url 2.5.0",
  "url2",
  "url_serde",
@@ -2801,16 +2795,6 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-futures",
-]
-
-[[package]]
-name = "holochain_test_wasm_common"
-version = "0.2.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc14ddf8c521aa78c57d2e56e9bba16b334d910cfb9c1741504c67d890958be4"
-dependencies = [
- "hdk",
- "serde",
 ]
 
 [[package]]
@@ -6692,19 +6676,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tests"
-version = "0.0.1"
-dependencies = [
- "fixt",
- "futures",
- "hc_zome_notifications_provider_fcm_types",
- "hdk",
- "holochain",
- "serde",
- "tokio",
-]
-
-[[package]]
 name = "textwrap"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7395,12 +7366,6 @@ name = "untrusted"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a156c684c91ea7d62626509bce3cb4e1d9ed5c4d978f7b4352658f96a4c26b4a"
-
-[[package]]
-name = "unwrap_to"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cad414b2eed757c1b6f810f8abc814e298a9c89176b21fae092c7a87756fb839"
 
 [[package]]
 name = "unzip-n"

@@ -7,6 +7,22 @@ fn providers_path() -> Path {
 }
 
 #[hdk_extern]
+pub fn init(_: ()) -> ExternResult<InitCallbackResult> {
+    let mut functions: BTreeSet<(ZomeName, FunctionName)> = BTreeSet::new();
+
+    let zome_name = zome_info()?.name;
+    functions.insert((zome_name.clone(), FunctionName::from("ping")));
+
+    create_cap_grant(ZomeCallCapGrant {
+        tag: String::from("ping"),
+        access: CapAccess::Unrestricted,
+        functions: GrantedFunctions::Listed(functions),
+    })?;
+
+    Ok(InitCallbackResult::Pass)
+}
+
+#[hdk_extern]
 pub fn announce_as_provider(_: ()) -> ExternResult<()> {
     let my_pub_key = agent_info()?.agent_latest_pubkey;
 
@@ -81,7 +97,7 @@ pub fn request_notify_agent(input: NotifyAgentInput) -> ExternResult<()> {
 
     let response = call_remote(
         provider.clone(),
-        zome_info()?.name,
+        "notifications_provider_fcm_bridge",
         FunctionName::from("notify_agent"), // Needs to be defined in the provider's coordinator zome
         None,
         input,

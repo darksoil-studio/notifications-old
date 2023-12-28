@@ -5,7 +5,7 @@ pub fn register_new_fcm_token(token: String) -> ExternResult<()> {
     let response = call(
         CallTargetCell::Local,
         "notifications",
-        "get_available_provider".into(),
+        "get_available_notification_provider".into(),
         None,
         (),
     )?;

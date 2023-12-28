@@ -6,7 +6,6 @@ opt-level = "z"
 
 [workspace]
 members = [
-  "tests",
   "notifications/crates/*",
   "notifications/zomes/coordinator/*",
   "notifications/zomes/integrity/*",
