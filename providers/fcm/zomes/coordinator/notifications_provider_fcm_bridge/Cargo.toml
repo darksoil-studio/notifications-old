@@ -13,6 +13,7 @@ hdk = { workspace = true }
 serde = { workspace = true }
 
 hc_zome_notifications_types = { workspace = true }
+hc_zome_notifications_provider_fcm_types = { path = "../../../crates/notifications_provider_fcm_types" }
 
 [dev-dependencies]
 fixt = "*"

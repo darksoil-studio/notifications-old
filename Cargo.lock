@@ -2183,6 +2183,7 @@ version = "0.0.1"
 dependencies = [
  "fixt",
  "futures",
+ "hc_zome_notifications_provider_fcm_types",
  "hc_zome_notifications_types",
  "hdk",
  "holochain",
@@ -6696,6 +6697,7 @@ version = "0.0.1"
 dependencies = [
  "fixt",
  "futures",
+ "hc_zome_notifications_provider_fcm_types",
  "hdk",
  "holochain",
  "serde",

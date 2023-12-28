@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 
+use hc_zome_notifications_provider_fcm_types::ServiceAccountKey;
 use hdk::prelude::*;
 use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
@@ -65,7 +66,18 @@ async fn complex_flow() {
     /* Setup provider */
 
     // Publish Service Account Key
+    let _r: () = provider
+        .call(
+            &provider_fcm_zome,
+            "publish_new_service_account_key",
+            sample_service_account_key(),
+        )
+        .await;
+    // assert_eq!(record_1, None);
     // Announce as provider
+    let _r: () = provider
+        .call(&provider_notifications_zome, "announce_as_provider", ())
+        .await;
 
     /* Setup recipient */
     // Register FCM token
@@ -76,10 +88,30 @@ async fn complex_flow() {
     // FCM provider zome sends signal
     // Turn on recipient again
 
-    // let record_1: Option<Record> = conductors[0]
-    //     .call(&alice_zome, "get_agent_profile", alice_pub_key)
-    //     .await;
-    // assert_eq!(record_1, None);
-
     // consistency_10s([&alice, &bobbo]).await;
+}
+
+fn sample_service_account_key() -> ServiceAccountKey {
+    ServiceAccountKey {
+        /// key_type
+        key_type: None,
+        /// project_id
+        project_id: None,
+        /// private_key_id
+        private_key_id: None,
+        /// private_key
+        private_key: String::from("pk"),
+        /// client_email
+        client_email: String::from("pk"),
+        /// client_id
+        client_id: None,
+        /// auth_uri
+        auth_uri: None,
+        /// token_uri
+        token_uri: String::from("tu"),
+        /// auth_provider_x509_cert_url
+        auth_provider_x509_cert_url: None,
+        /// client_x509_cert_url
+        client_x509_cert_url: None,
+    }
 }

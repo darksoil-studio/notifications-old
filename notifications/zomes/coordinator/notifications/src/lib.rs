@@ -52,7 +52,8 @@ fn get_all_notifications_provider() -> ExternResult<Vec<AgentPubKey>> {
     Ok(pubkeys)
 }
 
-pub fn get_available_notification_provider() -> ExternResult<Option<AgentPubKey>> {
+#[hdk_extern]
+pub fn get_available_notification_provider(_: ()) -> ExternResult<Option<AgentPubKey>> {
     let all_providers = get_all_notifications_provider()?;
 
     for provider in all_providers {
@@ -74,7 +75,7 @@ pub fn get_available_notification_provider() -> ExternResult<Option<AgentPubKey>
 
 #[hdk_extern]
 pub fn request_notify_agent(input: NotifyAgentInput) -> ExternResult<()> {
-    let Some(provider) = get_available_notification_provider()? else {
+    let Some(provider) = get_available_notification_provider(())? else {
         return Err(wasm_error!(WasmErrorInner::Guest(String::from("Can't find any notifications provider"))))?;
     };
 
