@@ -19,12 +19,13 @@ pub struct Notification {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GetNotificationInput {
-    notification_hash: AnyDhtHash,
-    locale: String,
+    pub notification_hash: AnyDhtHash,
+    pub locale: String,
 }
 
 #[zome_trait]
 pub trait PendingNotifications {
+    /// Returning None here means that the notification was not found
     fn get_notification(input: GetNotificationInput) -> ExternResult<Option<Notification>>;
 
     fn emit_new_pending_notification(
