@@ -1,7 +1,6 @@
 use hc_zome_traits::*;
 use hdk::prelude::{holo_hash::DnaHash, *};
-
-pub type Hrl = (DnaHash, AnyDhtHash);
+use hrl::Hrl;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct HrlWithContext {

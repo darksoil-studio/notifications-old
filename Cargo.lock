@@ -2272,6 +2272,7 @@ version = "0.1.0"
 dependencies = [
  "hc_zome_traits",
  "hdk",
+ "hrl",
  "serde",
 ]
 
@@ -3030,6 +3031,16 @@ dependencies = [
  "libc",
  "match_cfg",
  "winapi 0.3.9",
+]
+
+[[package]]
+name = "hrl"
+version = "0.1.0"
+source = "git+https://github.com/holochain-open-dev/common?branch=main#0a3add815680de30b3b28e977032334d49ff7914"
+dependencies = [
+ "hdk",
+ "holo_hash",
+ "serde",
 ]
 
 [[package]]
