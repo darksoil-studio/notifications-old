@@ -29,7 +29,7 @@ pub trait PendingNotifications {
     fn get_notification(input: GetNotificationInput) -> ExternResult<Option<Notification>>;
 
     fn emit_new_pending_notification(notification: Notification) -> ExternResult<()> {
-        emit_signal(pending_notification)?;
+        emit_signal(notification)?;
 
         Ok(())
     }
