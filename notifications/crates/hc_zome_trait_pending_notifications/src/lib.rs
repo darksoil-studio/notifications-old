@@ -10,16 +10,22 @@ pub struct HrlWithContext {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct PendingNotification {
-    pub id: AnyDhtHash,
+pub struct Notification {
     pub title: String,
     pub body: String,
-    // pub hrl_to_navigate_to_on_click: HrlWithContext,
+    pub hrl_to_navigate_to_on_click: HrlWithContext,
+    pub pending: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GetNotificationInput {
+    notification_hash: AnyDhtHash,
+    locale: String,
 }
 
 #[zome_trait]
 pub trait PendingNotifications {
-    fn get_pending_notifications(_: ()) -> ExternResult<Vec<PendingNotification>>;
+    fn get_notification(input: GetNotificationInput) -> ExternResult<Option<Notification>>;
 
     fn emit_new_pending_notification(
         pending_notification: PendingNotification,

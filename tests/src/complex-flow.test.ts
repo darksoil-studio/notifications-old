@@ -95,6 +95,7 @@ test('setup provider and recipient, and send a notification to it', async t => {
       await Promise.race([
         new Promise((_, reject) => setTimeout(() => reject(), 2000)),
         new Promise(async resolve => {
+          // FCM provider zome sends signal
           (provider.appAgentWs as AppAgentWebsocket).on('signal', signal => {
             console.log(signal);
             resolve(undefined);
@@ -112,13 +113,6 @@ test('setup provider and recipient, and send a notification to it', async t => {
           });
         }),
       ]);
-
-      // FCM provider zome sends signal
-      // Turn on recipient again
-      // assert.deepEqual(
-      //   contentUpdate,
-      //   cleanNodeDecoding(readUpdatedOutput1.entry)
-      // );
     },
     true,
     { timeout: 30000 }

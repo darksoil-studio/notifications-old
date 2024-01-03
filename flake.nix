@@ -6,7 +6,7 @@
 
     holochain-flake.url = "github:holochain/holochain";
     holochain-flake.inputs.versions.follows = "versions";
-    holochain-flake.inputs.scaffolding.url = "github:holochain/scaffolding/develop";
+    # holochain-flake.inputs.scaffolding.url = "github:holochain/scaffolding/develop";
 
     nixpkgs.follows = "holochain-flake/nixpkgs";
     flake-parts.follows = "holochain-flake/flake-parts";

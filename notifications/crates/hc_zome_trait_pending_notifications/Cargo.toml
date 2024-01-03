@@ -8,4 +8,5 @@ edition = "2021"
 [dependencies]
 hdk = { workspace = true }
 serde = "1"
+
 hc_zome_traits = { git = "https://github.com/holochain-open-dev/zome-traits", branch = "main" }
