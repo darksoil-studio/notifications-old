@@ -2279,7 +2279,7 @@ dependencies = [
 [[package]]
 name = "hc_zome_traits"
 version = "0.1.0"
-source = "git+https://github.com/holochain-open-dev/zome-traits?branch=main#54890161866bfb69ec71fbe5cca1f5c92c603467"
+source = "git+https://github.com/holochain-open-dev/zome-traits?branch=main#09598e6f04b4884173e2fa98e18ab608cf27d33e"
 dependencies = [
  "blake",
  "convert_case 0.6.0",
