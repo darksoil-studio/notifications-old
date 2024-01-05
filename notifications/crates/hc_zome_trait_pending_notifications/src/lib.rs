@@ -1,5 +1,5 @@
 use hc_zome_traits::*;
-use hdk::prelude::{holo_hash::DnaHash, *};
+use hdk::prelude::*;
 use hrl::Hrl;
 
 #[derive(Serialize, Deserialize, Debug)]

@@ -4,7 +4,8 @@ use hdk::prelude::*;
 
 #[hdk_extern]
 pub fn register_fcm_token_for_agent(input: RegisterFCMTokenInput) -> ExternResult<()> {
-    let links = get_links(input.agent.clone(), LinkTypes::FCMToken, None)?;
+    let links = get_links(
+GetLinksInputBuilder::try_new(input.agent.clone(), LinkTypes::FCMToken)?.build())?;
 
     for link in links {
         delete_link(link.create_link_hash)?;
@@ -21,7 +22,8 @@ pub fn register_fcm_token_for_agent(input: RegisterFCMTokenInput) -> ExternResul
 }
 
 pub fn get_fcm_token_for_agent(agent: AgentPubKey) -> ExternResult<Option<String>> {
-    let links = get_links(agent.clone(), LinkTypes::FCMToken, None)?;
+    let links = get_links(
+        GetLinksInputBuilder::try_new(agent.clone(), LinkTypes::FCMToken)?.build())?;
 
     let Some(link) = links.first().cloned() else {
         return Ok(None);

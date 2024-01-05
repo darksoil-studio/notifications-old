@@ -55,9 +55,9 @@ pub fn ping(_: ()) -> ExternResult<()> {
 
 fn get_all_notifications_provider() -> ExternResult<Vec<AgentPubKey>> {
     let links = get_links(
-        providers_path().path_entry_hash()?,
-        LinkTypes::NotificationsProvider,
-        None,
+
+GetLinksInputBuilder::try_new(        providers_path().path_entry_hash()?,
+        LinkTypes::NotificationsProvider,)?.build()
     )?;
 
     let pubkeys = links

@@ -9,9 +9,9 @@ fn service_account_key_path() -> Path {
 #[hdk_extern]
 pub fn publish_new_service_account_key(key: ServiceAccountKey) -> ExternResult<()> {
     let links = get_links(
+        GetLinksInputBuilder::try_new(
         service_account_key_path().path_entry_hash()?,
-        LinkTypes::ServiceAccountKeys,
-        None,
+        LinkTypes::ServiceAccountKeys,)?.build()
     )?;
 
     for link in links {
@@ -31,10 +31,9 @@ pub fn publish_new_service_account_key(key: ServiceAccountKey) -> ExternResult<(
 }
 
 pub fn get_current_service_account_key() -> ExternResult<Option<ServiceAccountKey>> {
-    let links = get_links(
+    let links = get_links(GetLinksInputBuilder::try_new(
         service_account_key_path().path_entry_hash()?,
-        LinkTypes::ServiceAccountKeys,
-        None,
+        LinkTypes::ServiceAccountKeys,)?.build()
     )?;
 
     let Some(link) = links.first().cloned() else {
