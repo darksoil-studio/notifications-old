@@ -10,4 +10,4 @@ hdk = { workspace = true }
 serde = "1"
 
 hc_zome_traits = { git = "https://github.com/holochain-open-dev/zome-traits", branch = "main" }
-hrl = { git = "https://github.com/holochain-open-dev/common", branch = "main" }
+hrl = { git = "https://github.com/holochain-open-dev/common", branch = "for-hdk-0.3.0-beta-dev" }
