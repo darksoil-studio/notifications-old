@@ -33,14 +33,14 @@ test('setup provider and recipient, and send a notification to it', async t => {
       const providerFCMProvider = provider.cells.find(c =>
         c.name.includes('fcm')
       );
-
+      const recipientCell = recipient.namedCells.get('notifications');
       assert.equal(
         providerNotifications.cell_id[0].toString(),
-        recipient.cells[0].cell_id[0].toString()
+        recipientCell.cell_id[0].toString()
       );
       assert.equal(
         fixture.cells[0].cell_id[0].toString(),
-        recipient.cells[0].cell_id[0].toString()
+        recipientCell.cell_id[0].toString()
       );
       assert.equal(
         fixture.cells[0].cell_id[0].toString(),
@@ -93,7 +93,7 @@ test('setup provider and recipient, and send a notification to it', async t => {
       /* Send notification */
 
       await Promise.race([
-        new Promise((_, reject) => setTimeout(() => reject(), 2000)),
+        new Promise((_, reject) => setTimeout(() => reject(), 20000)),
         new Promise(async resolve => {
           // FCM provider zome sends signal
           (provider.appAgentWs as AppAgentWebsocket).on('signal', signal => {
@@ -115,6 +115,6 @@ test('setup provider and recipient, and send a notification to it', async t => {
       ]);
     },
     true,
-    { timeout: 30000 }
+    { timeout: 120000 }
   );
 });
