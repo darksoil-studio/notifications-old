@@ -7,7 +7,7 @@
     "network": "hc s clean && npm run build:happ && UI_PORT=8888 concurrently -k \"npm start -w @holochain-open-dev/notifications-provider\" \"npm run launch:happ\" \"holochain-playground\"",
     "test": "npm run build:happ && hc app pack tests/fixture/workdir --recursive && npm t -w tests",
     "launch:happ": "echo \"pass\" | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/notifications_provider.happ --ui-port $UI_PORT network -b https://bootstrap.holo.host webrtc wss://signal.holo.host",
-    "package": "npm run build:zomes && sh optimize-wasms.sh && hc app pack providers/fcm/apps/notifications_provider_fcm_recipient/workdir --recursive && hc app pack providers/fcm/apps/notifications_provider_fcm/workdir --recursive",
+    "package": "npm run build:zomes && sh optimize-wasms.sh && hc dna pack notifications/workdir && hc app pack providers/fcm/apps/notifications_provider_fcm_recipient/workdir --recursive && hc app pack providers/fcm/apps/notifications_provider_fcm/workdir --recursive",
     "build:happ": "npm run build:zomes && hc app pack providers/fcm/apps/notifications_provider_fcm_recipient/workdir --recursive && hc app pack providers/fcm/apps/notifications_provider_fcm/workdir --recursive",
     "build:zomes": "CARGO_TARGET_DIR=target cargo build --workspace --release --target wasm32-unknown-unknown"
   },
