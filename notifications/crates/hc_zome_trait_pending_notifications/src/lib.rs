@@ -27,6 +27,9 @@ pub trait PendingNotifications {
     /// Returning None here means that the notification was not found
     fn get_notification(input: GetNotificationInput) -> ExternResult<Option<Notification>>;
 
+    /// Returning None here means that the notification was not found
+    fn mark_notification_as_read(notification_hash: AnyDhtHash) -> ExternResult<()>;
+
     fn emit_new_pending_notification(notification: Notification) -> ExternResult<()> {
         emit_signal(notification)?;
 
