@@ -38,7 +38,7 @@ pub fn announce_as_provider(_: ()) -> ExternResult<()> {
         functions: GrantedFunctions::Listed(functions),
     })?;
 
-    create_link(
+    create_link_relaxed(
         providers_path().path_entry_hash()?,
         my_pub_key,
         LinkTypes::NotificationsProvider,
@@ -48,6 +48,32 @@ pub fn announce_as_provider(_: ()) -> ExternResult<()> {
     Ok(())
 }
 
+pub fn create_link_relaxed<T, E>(
+    base_address: impl Into<AnyLinkableHash>,
+    target_address: impl Into<AnyLinkableHash>,
+    link_type: T,
+    tag: impl Into<LinkTag>,
+) -> ExternResult<ActionHash>
+where
+    ScopedLinkType: TryFrom<T, Error = E>,
+    WasmError: From<E>,
+{
+    let ScopedLinkType {
+        zome_index,
+        zome_type: link_type,
+    } = link_type.try_into()?;
+    HDK.with(|h| {
+        h.borrow().create_link(CreateLinkInput::new(
+            base_address.into(),
+            target_address.into(),
+            zome_index,
+            link_type,
+            tag.into(),
+            ChainTopOrdering::Relaxed,
+        ))
+    })
+}
+
 #[hdk_extern]
 pub fn ping(_: ()) -> ExternResult<()> {
     Ok(())
@@ -55,9 +81,11 @@ pub fn ping(_: ()) -> ExternResult<()> {
 
 fn get_all_notifications_provider() -> ExternResult<Vec<AgentPubKey>> {
     let links = get_links(
-
-GetLinksInputBuilder::try_new(        providers_path().path_entry_hash()?,
-        LinkTypes::NotificationsProvider,)?.build()
+        GetLinksInputBuilder::try_new(
+            providers_path().path_entry_hash()?,
+            LinkTypes::NotificationsProvider,
+        )?
+        .build(),
     )?;
 
     let pubkeys = links

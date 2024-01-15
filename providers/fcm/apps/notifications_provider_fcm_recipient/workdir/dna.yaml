@@ -16,4 +16,5 @@ coordinator:
         - name: notifications_integrity
     - name: notifications_provider_fcm_recipient
       bundled: "../../../../../target/wasm32-unknown-unknown/release/hc_zome_notifications_provider_fcm_recipient.wasm"
-      dependencies: []
+      dependencies:
+        - name: notifications_integrity

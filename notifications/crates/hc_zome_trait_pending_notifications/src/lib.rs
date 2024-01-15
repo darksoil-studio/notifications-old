@@ -16,7 +16,7 @@ pub struct Notification {
     pub pending: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct GetNotificationInput {
     pub notification_hash: AnyDhtHash,
     pub locale: String,

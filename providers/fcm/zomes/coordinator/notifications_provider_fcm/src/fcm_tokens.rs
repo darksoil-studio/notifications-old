@@ -1,17 +1,19 @@
+use crate::{create_link_relaxed, delete_link_relaxed};
 use hc_zome_notifications_provider_fcm_integrity::LinkTypes;
 use hc_zome_notifications_provider_fcm_types::RegisterFCMTokenInput;
 use hdk::prelude::*;
 
 #[hdk_extern]
 pub fn register_fcm_token_for_agent(input: RegisterFCMTokenInput) -> ExternResult<()> {
-    let links = get_links(GetLinksInputBuilder::try_new(
-        input.agent.clone(), LinkTypes::FCMToken)?.build())?;
+    let links = get_links(
+        GetLinksInputBuilder::try_new(input.agent.clone(), LinkTypes::FCMToken)?.build(),
+    )?;
 
     for link in links {
-        delete_link(link.create_link_hash)?;
+        delete_link_relaxed(link.create_link_hash)?;
     }
 
-    create_link(
+    create_link_relaxed(
         input.agent.clone(),
         input.agent,
         LinkTypes::FCMToken,
@@ -22,8 +24,8 @@ pub fn register_fcm_token_for_agent(input: RegisterFCMTokenInput) -> ExternResul
 }
 
 pub fn get_fcm_token_for_agent(agent: AgentPubKey) -> ExternResult<Option<String>> {
-    let links = get_links(
-GetLinksInputBuilder::try_new(agent.clone(), LinkTypes::FCMToken)?.build())?;
+    let links =
+        get_links(GetLinksInputBuilder::try_new(agent.clone(), LinkTypes::FCMToken)?.build())?;
 
     let Some(link) = links.first().cloned() else {
         return Ok(None);

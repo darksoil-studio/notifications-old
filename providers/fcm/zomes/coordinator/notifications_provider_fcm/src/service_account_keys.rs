@@ -1,3 +1,4 @@
+use crate::{create_link_relaxed, delete_link_relaxed};
 use hc_zome_notifications_provider_fcm_integrity::*;
 use hc_zome_notifications_provider_fcm_types::ServiceAccountKey;
 use hdk::prelude::*;
@@ -10,17 +11,19 @@ fn service_account_key_path() -> Path {
 pub fn publish_new_service_account_key(key: ServiceAccountKey) -> ExternResult<()> {
     let links = get_links(
         GetLinksInputBuilder::try_new(
-        service_account_key_path().path_entry_hash()?,
-        LinkTypes::ServiceAccountKeys,)?.build()
+            service_account_key_path().path_entry_hash()?,
+            LinkTypes::ServiceAccountKeys,
+        )?
+        .build(),
     )?;
 
     for link in links {
-        delete_link(link.create_link_hash)?;
+        delete_link_relaxed(link.create_link_hash)?;
     }
 
     let action_hash = create_entry(EntryTypes::ServiceAccountKey(key))?;
 
-    create_link(
+    create_link_relaxed(
         service_account_key_path().path_entry_hash()?,
         action_hash,
         LinkTypes::ServiceAccountKeys,
@@ -31,9 +34,12 @@ pub fn publish_new_service_account_key(key: ServiceAccountKey) -> ExternResult<(
 }
 
 pub fn get_current_service_account_key() -> ExternResult<Option<ServiceAccountKey>> {
-    let links = get_links(GetLinksInputBuilder::try_new(
-        service_account_key_path().path_entry_hash()?,
-        LinkTypes::ServiceAccountKeys,)?.build()
+    let links = get_links(
+        GetLinksInputBuilder::try_new(
+            service_account_key_path().path_entry_hash()?,
+            LinkTypes::ServiceAccountKeys,
+        )?
+        .build(),
     )?;
 
     let Some(link) = links.first().cloned() else {
