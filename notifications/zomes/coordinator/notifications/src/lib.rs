@@ -120,7 +120,9 @@ pub fn get_available_notification_provider(_: ()) -> ExternResult<Option<AgentPu
 #[hdk_extern]
 pub fn request_notify_agent(input: NotifyAgentInput) -> ExternResult<()> {
     let Some(provider) = get_available_notification_provider(())? else {
-        return Err(wasm_error!(WasmErrorInner::Guest(String::from("Can't find any notifications provider"))))?;
+        return Err(wasm_error!(WasmErrorInner::Guest(String::from(
+            "Can't find any notifications provider"
+        ))))?;
     };
 
     let response = call_remote(
