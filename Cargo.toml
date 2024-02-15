@@ -10,6 +10,7 @@ members = [
   "services/*/service/zomes/coordinator/*",
   "services/*/service/zomes/integrity/*",
   "services/*/provider/dnas/*/zomes/coordinator/*",
+  "services/*/provider/runner",
   "services/*/provider/dnas/*/zomes/integrity/*",
 ]
 resolver = "2"

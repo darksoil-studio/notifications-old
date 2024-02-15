@@ -1,0 +1,19 @@
+[package]
+name = "email_notifications_provider_runner"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.79"
+clap = { version = "4.5.0", features = ["derive"] }
+dirs = "5.0.1"
+either = "1.10.0"
+holochain = { workspace = true }
+holochain_client = "0.5.0-dev.27"
+holochain_keystore = "0.3.0-beta-dev.28"
+portpicker = "0.1.1"
+tokio = { version = "1.36.0", features = ["full"] }
+url2 = "0.0.6"
+hc_zome_email_notifications_types = { path ="../../crates/email_notifications_types" }
