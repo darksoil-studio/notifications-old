@@ -1,0 +1,18 @@
+---
+manifest_version: "1"
+name: email_notifications_provider
+integrity:
+  network_seed: ~
+  properties: ~
+  origin_time: 1703170182915758
+  zomes:
+    - name: email_notifications_provider_integrity
+      bundled: "../../../../../../target/wasm32-unknown-unknown/release/hc_zome_email_notifications_provider_integrity.wasm"
+      dependencies: ~
+coordinator:
+  zomes:
+    - name: email_notifications_provider
+      hash: ~
+      bundled: "../../../../../../target/wasm32-unknown-unknown/release/hc_zome_email_notifications_provider_coordinator.wasm"
+      dependencies:
+        - name: email_notifications_provider_integrity

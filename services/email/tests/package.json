@@ -1,0 +1,22 @@
+{
+  "name": "email-service-tests",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run build:zomes && npm run pack:provider && npm run pack:fixture && vitest run",
+    "pack:fixture": "hc app pack ./fixture/workdir --recursive",
+    "pack:provider": "hc app pack ../provider/app --recursive",
+    "build:zomes": "cargo build --workspace --release --target wasm32-unknown-unknown"
+  },
+  "author": "",
+  "license": "CAL-1.0",
+  "dependencies": {
+    "@holochain/client": "^0.16.1",
+    "@holochain/tryorama": "^0.16.0-dev.0",
+    "@holochain-open-dev/utils": "^0.16.0",
+    "@msgpack/msgpack": "^2.7.0",
+    "vitest": "^0.34.5"
+  },
+  "type": "module"
+}

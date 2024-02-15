@@ -6,26 +6,17 @@ opt-level = "z"
 
 [workspace]
 members = [
-  "notifications/crates/*",
-  "notifications/zomes/coordinator/*",
-  "notifications/zomes/integrity/*",
-  "providers/*/crates/*",
-  "providers/*/zomes/coordinator/*",
-  "providers/*/zomes/integrity/*",
+  "services/*/crates/*",
+  "services/*/service/zomes/coordinator/*",
+  "services/*/service/zomes/integrity/*",
+  "services/*/provider/dnas/*/zomes/coordinator/*",
+  "services/*/provider/dnas/*/zomes/integrity/*",
 ]
 resolver = "2"
 
 [workspace.dependencies]
-hdi = "0.4.0-beta-dev.20"
-hdk = "0.3.0-beta-dev.24"
-holochain = "0.3.0-beta-dev.29"
+hdi = "0.4.0-beta-dev.27"
+hdk = "0.3.0-beta-dev.31"
+holochain = "0.3.0-beta-dev.37"
 serde = "1.0.193"
 
-[workspace.dependencies.hc_zome_notifications_coordinator]
-path = "notifications/zomes/coordinator/notifications"
-
-[workspace.dependencies.hc_zome_notifications_integrity]
-path = "notifications/zomes/integrity/notifications"
-
-[workspace.dependencies.hc_zome_notifications_types]
-path = "notifications/crates/hc_zome_notifications_types"

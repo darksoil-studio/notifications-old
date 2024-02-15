@@ -1,0 +1,13 @@
+[package]
+name = "hc_zome_fcm_notifications_service_integrity"
+version = "0.0.1"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "hc_zome_fcm_notifications_service_integrity"
+
+[dependencies]
+hdi = { workspace = true }
+
+serde = { workspace = true }
