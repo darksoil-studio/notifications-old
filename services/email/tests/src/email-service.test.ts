@@ -56,7 +56,7 @@ test('setup provider, sender and recipient, and send an email', async t => {
       });
 
       await dhtSync(
-        [provider, sender, recipient],
+        [sender, recipient],
         sender.namedCells.get('fixture_dna').cell_id[0]
       );
 
@@ -78,7 +78,7 @@ test('setup provider, sender and recipient, and send an email', async t => {
       });
 
       await dhtSync(
-        [provider, sender, recipient],
+        [sender, recipient],
         sender.namedCells.get('fixture_dna').cell_id[0]
       );
 

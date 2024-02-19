@@ -1,16 +1,10 @@
 use std::collections::HashMap;
 
 use clap::{Parser, Subcommand};
-use hc_zome_email_notifications_types::EmailCredentials;
-use holochain::{
-    prelude::{AppBundle, ExternIO},
-    HOLOCHAIN_VERSION,
-};
+use hc_zome_email_notifications_types::{EmailCredentials, SendEmailSignal};
+use holochain::prelude::{AppBundle, ExternIO, Signal};
 use holochain_client::*;
-use lettre::{
-    transport::smtp::authentication::Credentials, AsyncSmtpTransport, AsyncTransport, Message,
-    SmtpTransport, Tokio1Executor, Transport,
-};
+use lettre::{transport::smtp::authentication::Credentials, Message, SmtpTransport, Transport};
 
 mod launch;
 
@@ -94,7 +88,7 @@ async fn run() -> anyhow::Result<()> {
     }) = args.command
     {
         let email_credentials = EmailCredentials {
-         sender_email_address   ,
+            sender_email_address,
             password,
             smtp_relay_url,
         };
@@ -114,21 +108,23 @@ async fn run() -> anyhow::Result<()> {
     }
 
     // Listen for signal
-    app_agent_ws.on_signal(|signal| {
-        let Signal::App { signal, .. } = signal else {
-            return ();
-        };
+    app_agent_ws
+        .on_signal(|signal| {
+            let Signal::App { signal, .. } = signal else {
+                return ();
+            };
 
-        let Ok(send_email_signal) = signal.into_inner().decode::<SendEmailSignal>() else {
-            return ();
-        };
+            let Ok(send_email_signal) = signal.into_inner().decode::<SendEmailSignal>() else {
+                return ();
+            };
 
-        tokio::spawn(async move {
-            if let Err(err) = send_email(send_email_signal).await {
-                println!("Error sending email: {err:#?}");
-            }
-        });
-    });
+            tokio::spawn(async move {
+                if let Err(err) = send_email(send_email_signal).await {
+                    println!("Error sending email: {err:#?}");
+                }
+            });
+        })
+        .await?;
 
     tokio::signal::ctrl_c()
         .await
@@ -139,21 +135,28 @@ async fn run() -> anyhow::Result<()> {
 
 async fn send_email(send_email_signal: SendEmailSignal) -> anyhow::Result<()> {
     let email = Message::builder()
-        .from(format!("Sender <{}>", send_email_signal.credentials.sender_email_address.clone()).parse().unwrap())
-        .to(format!("Receiver <{}>", send_email_signal.email_address).parse().unwrap())
+        .from(
+            format!(
+                "Sender <{}>",
+                send_email_signal.credentials.sender_email_address.clone()
+            )
+            .parse()
+            .unwrap(),
+        )
+        .to(format!("Receiver <{}>", send_email_signal.email_address)
+            .parse()
+            .unwrap())
         .subject(send_email_signal.email.subject)
         .body(send_email_signal.email.body)
         .unwrap();
 
     let creds = Credentials::new(
-send_email_signal.credentials.sender_email_address.clone()
-send_email_signal.credentials.password.clone()
+        send_email_signal.credentials.sender_email_address.clone(),
+        send_email_signal.credentials.password.clone(),
     );
 
     // Open a remote connection to the given smtp relay
-    let mailer = SmtpTransport::relay(
-send_email_signal.credentials.smtp_relay_url.clone()
-       )
+    let mailer = SmtpTransport::relay(send_email_signal.credentials.smtp_relay_url.as_str())
         .unwrap()
         .credentials(creds)
         .build();
@@ -161,6 +164,6 @@ send_email_signal.credentials.smtp_relay_url.clone()
     // Send the email
     match mailer.send(&email) {
         Ok(_) => Ok(()),
-        Err(e) => Err(anyhow!("Could not send email: {:?}", e)),
+        Err(e) => Err(anyhow::anyhow!("Could not send email: {:?}", e)),
     }
 }

@@ -1,8 +1,8 @@
-use std::{collections::HashMap, path::PathBuf, sync::Arc};
+use std::{collections::HashMap, path::PathBuf};
 
 use holochain::{
     conductor::{
-        config::{AdminInterfaceConfig, ConductorConfig, KeystoreConfig},
+        config::{AdminInterfaceConfig, ConductorConfig},
         interface::InterfaceDriver,
         state::AppInterfaceId,
         Conductor,
