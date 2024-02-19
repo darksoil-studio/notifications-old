@@ -2,8 +2,9 @@ import { test, assert } from 'vitest';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-import { runScenario, dhtSync, } from '@holochain/tryorama';
-import { AppAgentWebsocket } from '@holochain/client';
+import { runScenario, dhtSync } from '@holochain/tryorama';
+import { AppAgentWebsocket, Record } from '@holochain/client';
+import { EntryRecord } from '@holochain-open-dev/utils';
 
 test('setup provider, sender and recipient, and send an email', async t => {
   await runScenario(
@@ -23,10 +24,16 @@ test('setup provider, sender and recipient, and send an email', async t => {
         { appBundleSource: { path: testHappUrl } },
       ]);
 
-      const providerServiceCell = provider.namedCells.get('email_notifications_service');
-      const providerProviderCell = provider.namedCells.get('email_notifications_provider')
+      const providerServiceCell = provider.namedCells.get(
+        'email_notifications_service'
+      );
+      const providerProviderCell = provider.namedCells.get(
+        'email_notifications_provider'
+      );
       assert.equal(
-        sender.cells[0].cell_id[0].toString(),
+        sender.namedCells
+          .get('email_notifications_service')
+          .cell_id[0].toString(),
         providerServiceCell.cell_id[0].toString()
       );
 
@@ -38,9 +45,9 @@ test('setup provider, sender and recipient, and send an email', async t => {
 
       // Publish Email Credentials
       const emailCredentials = {
-        username: 'some@address.com',
+        sender_email_address: 'some@address.com',
         password: 'some@address.com',
-        smtp_relay_url: 'smtp.gmail.com'
+        smtp_relay_url: 'smtp.gmail.com',
       };
       await providerProviderCell.callZome({
         zome_name: 'email_notifications_provider',
@@ -49,17 +56,31 @@ test('setup provider, sender and recipient, and send an email', async t => {
       });
 
       await dhtSync(
-        [provider, sender],
-        sender.cells[0].cell_id[0]
+        [provider, sender, recipient],
+        sender.namedCells.get('fixture_dna').cell_id[0]
       );
+
+      const NOTIFICATION_TYPE = 'some_app_defined_notification_type';
 
       const emailAddress = 'some@address.com';
       // Register email address
-      await recipient.cells[0].callZome({
-        zome_name: 'email_notifications_service',
-        fn_name: 'register_email_address',
-        payload: emailAddress,
+      await recipient.namedCells.get('fixture_dna').callZome({
+        zome_name: 'notifications_settings',
+        fn_name: 'set_notifications_settings',
+        payload: {
+          settings_by_notification_type: {
+            [NOTIFICATION_TYPE]: {
+              type: 'Email',
+              email_address: emailAddress,
+            },
+          },
+        },
       });
+
+      await dhtSync(
+        [provider, sender, recipient],
+        sender.namedCells.get('fixture_dna').cell_id[0]
+      );
 
       /* Send email notification */
 
@@ -75,24 +96,33 @@ test('setup provider, sender and recipient, and send an email', async t => {
           (provider.appAgentWs as AppAgentWebsocket).on('signal', signal => {
             console.log(signal);
             const payload = signal.payload as any;
-            assert.deepEqual(payload.email_address, emailAddress)
-            assert.deepEqual(payload.email, email)
-            assert.deepEqual(payload.credentials, emailCredentials)
+            assert.deepEqual(payload.email_address, emailAddress);
+            assert.deepEqual(payload.email, email);
+            assert.deepEqual(payload.credentials, emailCredentials);
             resolve(undefined);
           });
-          // Send notification from fixture notification zome
-          sender.cells[0].callZome({
+          // Get notification settings from fixture notification settings zome
+          const settings: Record = await sender.namedCells
+            .get('fixture_dna')
+            .callZome({
+              zome_name: 'notifications_settings',
+              fn_name: 'get_notifications_settings_for',
+              payload: recipient.agentPubKey,
+            });
+          // Send email
+          sender.namedCells.get('email_notifications_service').callZome({
             zome_name: 'email_notifications_service',
             fn_name: 'request_send_email',
             payload: {
+              email_address: new EntryRecord<any>(settings).entry
+                .settings_by_notification_type[NOTIFICATION_TYPE].email_address,
               email,
-              agent: recipient.agentPubKey,
             },
           });
         }),
       ]);
     },
     true,
-    { timeout: 120000 }
+    { timeout: 520000 }
   );
 });

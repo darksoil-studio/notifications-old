@@ -2,7 +2,7 @@ use hdi::prelude::*;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SendEmailInput {
-    pub agent: AgentPubKey,
+    pub email_address: String,
     pub email: Email,
 }
 
@@ -15,7 +15,7 @@ pub struct Email {
 #[derive(Clone)]
 #[hdk_entry_helper]
 pub struct EmailCredentials {
-    pub username: String,
+    pub sender_email_address: String,
     pub password: String,
     pub smtp_relay_url: String,
 }
@@ -25,10 +25,4 @@ pub struct SendEmailSignal {
     pub email_address: String,
     pub email: Email,
     pub credentials: EmailCredentials,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct RegisterEmailAddressInput {
-    pub email_address: String,
-    pub agent: AgentPubKey,
 }

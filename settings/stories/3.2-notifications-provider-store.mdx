@@ -1,0 +1,21 @@
+import { Meta } from '@storybook/addon-docs';
+import { ArgsTable } from '@storybook/addon-docs/blocks';
+import { ProfilesStore } from '@holochain-open-dev/notifications-provider'
+
+<Meta title="Frontend/NotificationsProviderStore" 
+  parameters={ { previewTabs: { canvas: { hidden: true } } } }
+/>
+
+# NotificationsProviderStore
+
+The `NotificationsProviderStore` is a typescript class that contains `svelte` stores, to which you can subscribe to get reactive updates in your elements.
+
+```js
+import { NotificationsProviderStore, NotificationsProviderClient } from "@holochain-open-dev/profiles";
+
+const store = new NotificationsProviderStore(new NotificationsProviderClient(appAgentClient, 'my-role-name'));
+```
+
+> Learn how to setup the `AppAgentClient` object [here](https://www.npmjs.com/package/@holochain/client).
+
+Learn more about the stores and how to integrate them in different frameworks [here](https://holochain-open-dev.github.io/reusable-modules/frontend/using/#stores).

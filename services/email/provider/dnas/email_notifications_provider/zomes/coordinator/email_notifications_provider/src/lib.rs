@@ -1,7 +1,6 @@
 use hc_zome_email_notifications_types::{SendEmailInput, SendEmailSignal};
 use hdk::prelude::*;
 
-mod email_addresses;
 mod email_credentials;
 
 #[hdk_extern]
@@ -24,12 +23,6 @@ pub fn init(_: ()) -> ExternResult<InitCallbackResult> {
 
 #[hdk_extern]
 pub fn send_email(input: SendEmailInput) -> ExternResult<()> {
-    let Some(email_address) = email_addresses::get_email_address_for_agent(input.agent)? else {
-        return Err(wasm_error!(WasmErrorInner::Guest(String::from(
-            "Agent hasn't registered their email token yet"
-        ))));
-    };
-
     let Some(credentials) = email_credentials::get_current_email_credentials()? else {
         return Err(wasm_error!(WasmErrorInner::Guest(String::from(
             "email authority hasn't registered a service account key yet"
@@ -38,7 +31,7 @@ pub fn send_email(input: SendEmailInput) -> ExternResult<()> {
 
     let signal = SendEmailSignal {
         email: input.email,
-        email_address,
+        email_address: input.email_address,
         credentials,
     };
 

@@ -7,7 +7,7 @@
     "test": "npm run build:zomes && npm run pack:provider && npm run pack:fixture && vitest run",
     "pack:fixture": "hc app pack ./fixture/workdir --recursive",
     "pack:provider": "hc app pack ../provider/app --recursive",
-    "build:zomes": "cargo build --workspace --release --target wasm32-unknown-unknown"
+    "build:zomes": "cargo build --workspace --exclude email_notifications_provider_runner --release --target wasm32-unknown-unknown"
   },
   "author": "",
   "license": "CAL-1.0",

@@ -1,0 +1,119 @@
+import { fcmPushNotificationsProviderStoreContext } from './fcm_push_notifications_provider/fcm-push-notifications-provider/context.js';
+import { FcmPushNotificationsProviderClient } from './fcm_push_notifications_provider/fcm-push-notifications-provider/fcm-push-notifications-provider-client.js';
+import { FcmPushNotificationsProviderStore } from './fcm_push_notifications_provider/fcm-push-notifications-provider/fcm-push-notifications-provider-store.js';
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="Description" content="Put your description here." />
+    <base href="/" />
+    
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background-color: #ededed;
+        height: 100%;
+        width: 100%;
+      }
+      
+      body {
+        display: flex;
+      }
+
+    </style>
+    <title>Notifications Provider</title>
+  </head>
+
+  <body>
+    <demo-app></demo-app>
+
+    <script type="module">
+import '@shoelace-style/shoelace/dist/themes/light.css';
+import { ContextProvider } from '@lit/context';
+import { LitElement, css, html } from 'lit';
+import { AppAgentWebsocket } from '@holochain/client';
+import { sharedStyles } from '@holochain-open-dev/elements';
+import '../src/elements/notifications-provider-context.ts';
+import { NotificationsProviderStore, NotificationsProviderClient } from '../src/index.ts';
+import '@holochain-open-dev/elements/dist/elements/display-error.js';
+import {
+  ProfilesClient,
+  ProfilesStore,
+  profilesStoreContext
+} from '@holochain-open-dev/profiles';
+import '@holochain-open-dev/profiles/dist/elements/profile-prompt.js';
+import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
+
+export class DemoApp extends LitElement {
+
+constructor() {
+    super();
+    this._loading = true;
+    this._view = { view: 'main' };
+  }
+
+  async firstUpdated() {
+    this._client = await AppAgentWebsocket.connect(new URL('ws://localhost'), 'notifications_provider');
+
+    await this.initStores(this._client);
+
+    this._loading = false;
+    this.requestUpdate();
+  }
+
+  async initStores(appAgentClient) {
+    const profilesStore = new ProfilesStore(new ProfilesClient(appAgentClient, 'notifications_provider_test'));
+    new ContextProvider(this, profilesStoreContext, profilesStore);
+    
+    this._notificationsProviderStore = new NotificationsProviderStore(new NotificationsProviderClient(appAgentClient, 'notifications_provider_test'));
+    this._fcmPushNotificationsProviderStore = new ContextProvider(this, fcmPushNotificationsProviderStoreContext, new FcmPushNotificationsProviderStore(new FcmPushNotificationsProviderClient(appAgentClient, 'fcm_push_notifications_provider')));
+  }
+
+  renderContent() {
+    return html`
+      <notifications-provider-context .store=${this._notificationsProviderStore}>
+        <!-- TODO: add here the content of your application -->
+      </notifications-provider-context>
+    `;
+  }
+
+  render() {
+    if (this._loading)
+      return html`<div
+        class="row"
+        style="flex: 1; height: 100%; align-items: center; justify-content: center;"
+      >
+        <sl-spinner></sl-spinner>
+      </div>`;
+
+    return html`
+        <div class="fill row" style="width: 100vw; height: 100%;">
+          <profile-prompt style="flex: 1;">
+            ${this.renderContent()}
+          </profile-prompt>
+        </div>
+    `;
+  }
+
+  static styles = [
+    css`
+      :host {
+        display: flex;
+        flex: 1;
+      }
+    `,
+    sharedStyles,
+  ];}
+      
+      customElements.define('demo-app', DemoApp);
+    </script>
+  </body>
+</html>

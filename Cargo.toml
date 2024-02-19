@@ -6,6 +6,8 @@ opt-level = "z"
 
 [workspace]
 members = [
+  "settings/zomes/integrity/*",
+  "settings/zomes/coordinator/*",
   "services/*/crates/*",
   "services/*/service/zomes/coordinator/*",
   "services/*/service/zomes/integrity/*",
@@ -20,4 +22,3 @@ hdi = "0.4.0-beta-dev.27"
 hdk = "0.3.0-beta-dev.31"
 holochain = "0.3.0-beta-dev.37"
 serde = "1.0.193"
-

@@ -10,6 +10,8 @@
       url = "github:holochain/holochain";
       inputs.versions.follows = "versions";
     };
+
+    crane.url = "github:ipetkov/crane";
   };
 
   outputs = inputs @ { ... }:
@@ -35,6 +37,15 @@
                 cargo-nextest
                 binaryen
               ];
+            };
+
+            packages = {
+              email-notifications-provider = inputs'.craneLib.buildPackage {
+                src = ./.;
+                cargoExtraArgs = "-p email_notifications_provider_runner";
+                nativeBuildInputs = [ pkgs.pkg-config ];
+                PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+              };
             };
           };
       };
