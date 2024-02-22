@@ -10,11 +10,11 @@
     , options
     , ...
     }: {
-      zomes.email_notifications_service_integrity = inputs.hcUtils.outputs.lib.rustZome {
-					inherit excludedCrates;
-          workspacePath = rootPath;
-          holochain = inputs'.holochain;
-					cratePath = ./.;
+      packages.email_notifications_service_integrity = inputs.hcUtils.outputs.lib.rustZome {
+				inherit excludedCrates;
+        workspacePath = rootPath;
+        holochain = inputs'.holochain;
+				cratePath = ./.;
       };
   	};
 }

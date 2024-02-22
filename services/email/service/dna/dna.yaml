@@ -11,7 +11,7 @@ integrity:
       bundled: "../../../../target/wasm32-unknown-unknown/release/hc_zome_email_notifications_service_integrity.wasm"
 coordinator:
   zomes:
-    - name: email_notifications_service
+    - name: email_notifications_service_coordinator
       bundled: "../../../../target/wasm32-unknown-unknown/release/hc_zome_email_notifications_service_coordinator.wasm"
       dependencies:
         - name: email_notifications_service_integrity

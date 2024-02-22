@@ -22,17 +22,18 @@
     , options
     , ...
     }: {
-  	  dnas.email_notifications_provider = inputs.hcUtils.outputs.lib.dna {
+  	  packages.email_notifications_provider = inputs.hcUtils.outputs.lib.dna {
           holochain = inputs'.holochain;
           dnaManifest = ./dna/dna.yaml;
-          zomes = config.zomes;
+          zomes = {
+            email_notifications_provider_integrity = self'.packages.email_notifications_provider_integrity;
+            email_notifications_provider_coordinator = self'.packages.email_notifications_provider_coordinator;
+          };
           # let
           #   coordinators = ;
           #   integrities = ;
           # in {
           #   inherit coordinators integrities;
-          #   email_notifications_provider_integrity = self'.packages.email_notifications_provider-integrity-zome;
-          #   email_notifications_provider = self'.packages.email_notifications_provider-coordinator-zome;
           # };
   		};
   	};

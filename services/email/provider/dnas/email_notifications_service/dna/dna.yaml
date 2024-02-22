@@ -7,14 +7,11 @@ integrity:
   origin_time: 1703170182915758
   zomes:
     - name: email_notifications_service_integrity
-      bundled: "../../../../../../target/wasm32-unknown-unknown/release/hc_zome_email_notifications_service_integrity.wasm"
 coordinator:
   zomes:
-    - name: email_notifications_service
-      bundled: "../../../../../../target/wasm32-unknown-unknown/release/hc_zome_email_notifications_service_coordinator.wasm"
+    - name: email_notifications_service_coordinator
       dependencies:
         - name: email_notifications_service_integrity
     - name: email_notifications_bridge
-      bundled: "../../../../../../target/wasm32-unknown-unknown/release/hc_zome_email_notifications_bridge.wasm"
       dependencies:
         - name: email_notifications_service_integrity

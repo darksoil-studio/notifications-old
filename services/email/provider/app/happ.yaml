@@ -8,7 +8,6 @@ roles:
       strategy: create
       deferred: false
     dna:
-      bundled: "../dnas/email_notifications_service/dna/email_notifications_service.dna"
       modifiers:
         network_seed: ~
         properties: ~
@@ -21,7 +20,6 @@ roles:
       strategy: create
       deferred: false
     dna:
-      bundled: "../dnas/email_notifications_provider/dna/email_notifications_provider.dna"
       modifiers:
         network_seed: ~
         properties: ~

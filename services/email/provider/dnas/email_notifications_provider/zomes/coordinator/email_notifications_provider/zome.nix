@@ -9,7 +9,7 @@
     , lib
     , ...
     }: {
-  	  zomes.email_notifications_provider = inputs.hcUtils.outputs.lib.rustZome {
+  	  packages.email_notifications_provider_coordinator = inputs.hcUtils.outputs.lib.rustZome {
 				inherit excludedCrates;
         workspacePath = rootPath;
         holochain = inputs'.holochain;
