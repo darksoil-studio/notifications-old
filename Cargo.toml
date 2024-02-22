@@ -22,3 +22,12 @@ hdi = "0.4.0-beta-dev.27"
 hdk = "0.3.0-beta-dev.31"
 holochain = "0.3.0-beta-dev.37"
 serde = "1.0.193"
+
+[patch.crates-io]
+hdi = { git = "https://github.com/holochain/holochain", branch = "develop" }
+hdk = { git = "https://github.com/holochain/holochain", branch = "develop" }
+
+holo_hash = { git = "https://github.com/holochain/holochain", branch = "develop" }
+kitsune_p2p = { git = "https://github.com/holochain/holochain", branch = "develop" }
+holochain_zome_types = { git = "https://github.com/holochain/holochain", branch = "develop" }
+holochain_integrity_types = { git = "https://github.com/holochain/holochain", branch = "develop" }

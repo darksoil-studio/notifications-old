@@ -33,3 +33,6 @@ storybook-static
 # cargo
 /target/
 /.cargo/
+
+# nix
+result

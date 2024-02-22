@@ -1,5 +1,5 @@
-use hc_zome_email_notifications_service_integrity::*;
-use hc_zome_email_notifications_types::SendEmailInput;
+use email_notifications_service_integrity::*;
+use email_notifications_types::SendEmailInput;
 use hdk::prelude::*;
 
 fn providers_path() -> Path {

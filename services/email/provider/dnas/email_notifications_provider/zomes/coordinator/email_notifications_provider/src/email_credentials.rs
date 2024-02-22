@@ -1,6 +1,6 @@
 use crate::{create_link_relaxed, delete_link_relaxed};
-use hc_zome_email_notifications_provider_integrity::*;
-use hc_zome_email_notifications_types::EmailCredentials;
+use email_notifications_provider_integrity::*;
+use email_notifications_types::EmailCredentials;
 use hdk::prelude::*;
 
 fn email_credentials_path() -> Path {

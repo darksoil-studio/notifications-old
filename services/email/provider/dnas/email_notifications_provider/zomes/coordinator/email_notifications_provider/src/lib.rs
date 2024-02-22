@@ -1,4 +1,4 @@
-use hc_zome_email_notifications_types::{SendEmailInput, SendEmailSignal};
+use email_notifications_types::{SendEmailInput, SendEmailSignal};
 use hdk::prelude::*;
 
 mod email_credentials;

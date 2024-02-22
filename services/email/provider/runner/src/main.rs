@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use clap::{Parser, Subcommand};
-use hc_zome_email_notifications_types::{EmailCredentials, SendEmailSignal};
+use email_notifications_types::{EmailCredentials, SendEmailSignal};
 use holochain::prelude::{AppBundle, ExternIO, Signal};
 use holochain_client::*;
 use lettre::{transport::smtp::authentication::Credentials, Message, SmtpTransport, Transport};

@@ -1,4 +1,4 @@
-use hc_zome_email_notifications_types::EmailCredentials;
+use email_notifications_types::EmailCredentials;
 use hdi::prelude::*;
 
 #[derive(Serialize, Deserialize)]

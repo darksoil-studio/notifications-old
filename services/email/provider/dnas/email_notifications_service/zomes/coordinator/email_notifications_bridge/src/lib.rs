@@ -1,4 +1,4 @@
-use hc_zome_email_notifications_types::SendEmailInput;
+use email_notifications_types::SendEmailInput;
 use hdk::prelude::*;
 
 // TRAIT

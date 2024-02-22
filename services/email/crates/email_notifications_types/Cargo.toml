@@ -1,5 +1,5 @@
 [package]
-name = "hc_zome_email_notifications_types"
+name = "email_notifications_types"
 version = "0.1.0"
 edition = "2021"
 

@@ -1,18 +1,18 @@
 [package]
-name = "hc_zome_email_notifications_bridge"
+name = "email_notifications_bridge"
 version = "0.0.1"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
-name = "hc_zome_email_notifications_bridge"
+name = "email_notifications_bridge"
 
 [dependencies]
 hdk = { workspace = true }
 
 serde = { workspace = true }
 
-hc_zome_email_notifications_types = { path = "../../../../../../crates/email_notifications_types" }
+email_notifications_types = { path = "../../../../../../crates/email_notifications_types" }
 
 [dev-dependencies]
 fixt = "*"
