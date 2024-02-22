@@ -35,14 +35,12 @@
           , self'
           , ...
           }: {
-            config.zomes = lib.mkOption { type = lib.types.attrsOf lib.types.package; };
-            config.dnas = lib.mkOption { type = lib.types.attrsOf lib.types.package; };
 
             # config.packages = config.zomes // config.dnas;
             # config.zomes = {};
             # packages.zomes = lib.makeScope pkgs.newScope (_: {});
 
-            config.devShells.default = pkgs.mkShell {
+            devShells.default = pkgs.mkShell {
               inputsFrom = [ inputs'.holochain.devShells.holonix ];
               packages = with pkgs; [
                 nodejs-18_x
